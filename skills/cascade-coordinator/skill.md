@@ -173,6 +173,20 @@ description: Cascade (级联战队) team coordinator skill. Manages software pro
 5. **质量门控** - 每阶段必须通过质量检查才能进入下一阶段
 6. **文档同步** - 代码变更同时更新所有相关文档
 
+## 子代理运行模式
+
+> ⚠️ **重要**：所有专家都配置了 MCP 工具，必须前台运行！
+
+| 专家 | MCP 工具 | 运行模式 |
+|------|----------|----------|
+| Anchor | sequential-thinking, context7 | **必须前台运行** |
+| Atlas | sequential-thinking, context7 | **必须前台运行** |
+| Prism | sequential-thinking, context7 | **必须前台运行** |
+| Forge | sequential-thinking, context7, aurai-advisor | **必须前台运行** |
+| Scale | sequential-thinking, context7, aurai-advisor | **必须前台运行** |
+
+> MCP 工具在后台子代理中不可用，调用配置了 MCP 工具的专家时必须前台运行。
+
 ## 核心原则约束
 
 遵循统一项目开发工作流的核心原则：
