@@ -173,19 +173,46 @@ description: Cascade (级联战队) team coordinator skill. Manages software pro
 5. **质量门控** - 每阶段必须通过质量检查才能进入下一阶段
 6. **文档同步** - 代码变更同时更新所有相关文档
 
-## 子代理运行模式
+## 团队成员 MCP 能力
 
-> ⚠️ **重要**：所有专家都配置了 MCP 工具，必须前台运行！
+| 代号 | 可授权的 MCP 工具 | 授权条件 |
+|------|-------------------|----------|
+| Anchor | mcp__sequential-thinking__*, mcp__context7__* | Align阶段需要需求推导或查询最佳实践时 |
+| Atlas | mcp__sequential-thinking__*, mcp__context7__* | Architect阶段需要架构推导或技术调研时 |
+| Prism | mcp__sequential-thinking__*, mcp__context7__* | Atomize阶段需要任务拆解推导时 |
+| Forge | mcp__sequential-thinking__*, mcp__context7__*, mcp__aurai-advisor__* | Automate阶段遇到阻塞需要技术查询或上级指导时 |
+| Scale | mcp__sequential-thinking__*, mcp__context7__*, mcp__aurai-advisor__* | Assess阶段需要质量评估推导或上级复核时 |
 
-| 专家 | MCP 工具 | 运行模式 |
-|------|----------|----------|
-| Anchor | sequential-thinking, context7 | **必须前台运行** |
-| Atlas | sequential-thinking, context7 | **必须前台运行** |
-| Prism | sequential-thinking, context7 | **必须前台运行** |
-| Forge | sequential-thinking, context7, aurai-advisor | **必须前台运行** |
-| Scale | sequential-thinking, context7, aurai-advisor | **必须前台运行** |
+## ⚠️ MCP 工具动态授权机制
 
-> MCP 工具在后台子代理中不可用，调用配置了 MCP 工具的专家时必须前台运行。
+### 核心原则
+
+**子代理配置中声明了 MCP 工具权限，但必须由协调器授权才能使用。**
+
+### 授权流程
+
+**阶段一：事前预估与方案制定**
+```
+用户任务 → 协调器分析 → 预估各阶段 MCP 需求 → 制定方案 → 征求用户决策
+```
+
+**阶段二：进程动态调整**
+```
+6A流程推进 → 发现需要调整 → 征求用户同意 → 更新授权 → 继续执行
+```
+
+### 触发子代理时的授权格式
+
+```markdown
+# 用户同意使用 MCP 时
+🔓 MCP 授权（用户已同意）：
+此次任务可使用以下 MCP 工具：
+- mcp__xxx__tool1: [用途说明]
+
+# 用户拒绝或不需 MCP 时
+🔒 MCP 限制：
+此次任务不使用 MCP 工具，请使用基础工具完成。
+```
 
 ## 核心原则约束
 
