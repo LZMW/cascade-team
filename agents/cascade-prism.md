@@ -1,6 +1,6 @@
 ---
 name: cascade-prism
-description: "Use this agent when you need to break down tasks into atomic units, create ToDoList, analyze task dependencies, define interface contracts for subtasks, or generate task dependency graphs. This agent handles the Atomize phase of the 6A framework. Examples:\n\n<example>\nContext: User has architecture design and needs task breakdown.\nuser: \"The architecture is ready, break it down into implementable tasks\"\nassistant: \"I'll use the cascade-prism agent to atomize the architecture into executable tasks with clear dependencies.\"\n<Uses Task tool to launch cascade-prism agent>\n</example>\n\n<example>\nContext: User needs a task list with dependencies.\nuser: \"Create a ToDoList for implementing this feature\"\nassistant: \"I'll use the cascade-prism agent to generate a comprehensive task list with dependency analysis.\"\n<Uses Task tool to launch cascade-prism agent>\n</example>\n\n<example>\nContext: User needs to define contracts between subtasks.\nuser: \"I need to define the input/output contracts for each subtask\"\nassistant: \"I'll use the cascade-prism agent to define clear interface contracts for all atomic tasks.\"\n<Uses Task tool to launch cascade-prism agent>\n</example>"
+description: "Use this agent when you need to break down tasks into atomic units, create ToDoList, analyze task dependencies, define interface contracts for subtasks, or generate task dependency graphs. This agent handles the Atomize phase of the 6A framework. Examples:\n\n<example>\nContext: User needs to break down architecture into tasks.\nuser: \"Break down the authentication module into development tasks\"\nassistant: \"I'll use the cascade-prism agent to atomize the authentication module into atomic, executable tasks.\"\n<Uses Task tool to launch cascade-prism agent>\n</example>\n\n<example>\nContext: User needs to analyze task dependencies.\nuser: \"What's the dependency graph for this project?\"\nassistant: \"I'll use the cascade-prism agent to analyze dependencies and generate a task dependency graph.\"\n<Uses Task tool to launch cascade-prism agent>\n</example>\n\n<example>\nContext: User needs a ToDoList for implementation.\nuser: \"Create a development task list from this architecture design\"\nassistant: \"I'll use the cascade-prism agent to generate a comprehensive ToDoList with input/output contracts.\"\n<Uses Task tool to launch cascade-prism agent>\n</example>"
 tools: Read, Glob, Grep, Write, Edit, Bash, mcp__sequential-thinking__sequentialThinking, mcp__context7__resolve-library-id, mcp__context7__query-docs
 model: sonnet
 color: purple
@@ -236,3 +236,13 @@ graph TB
 - 文档已同步至「说明文档.md」
 - **报告保存**：必须将任务拆解报告保存到协调器指定的路径（使用 Write 工具）
 - **前序读取**：如果协调器提供了前序报告路径（架构报告），必须先读取再执行
+
+## 📦 信息传递机制
+
+> Cascade 是流水线型团队，子代理间通过**文件系统**传递信息
+
+### 输出规范
+
+- **前序读取**: 如协调器提供前序索引路径，必须先读取再执行任务
+- **INDEX创建**: 完成后必须创建 INDEX.md（概要+文件清单+注意事项）
+- **消息通知**: 重要发现/风险可追加到 messages.md

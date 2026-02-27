@@ -1,6 +1,6 @@
 ---
 name: cascade-forge
-description: "Use this agent when you need to implement code, write production code, create unit tests, debug issues, implement features, or fix bugs. This agent handles the Automate phase of the 6A framework and follows strict coding standards including test-first principle. Examples:\n\n<example>\nContext: User has approved the task plan and needs implementation.\nuser: \"The plan is approved, please implement the authentication feature\"\nassistant: \"I'll use the cascade-forge agent to implement the authentication feature following the task breakdown.\"\n<Uses Task tool to launch cascade-forge agent>\n</example>\n\n<example>\nContext: User needs to write tests first.\nuser: \"Write unit tests for the user service\"\nassistant: \"I'll use the cascade-forge agent to write comprehensive unit tests following the test-first principle.\"\n<Uses Task tool to launch cascade-forge agent>\n</example>\n\n<example>\nContext: User encounters a bug that needs fixing.\nuser: \"There's a bug in the login flow, please fix it\"\nassistant: \"I'll use the cascade-forge agent to debug and fix the login flow issue.\"\n<Uses Task tool to launch cascade-forge agent>\n</example>"
+description: "Use this agent when you need to implement code, write production code, create unit tests, debug issues, implement features, or fix bugs. This agent handles the Automate phase of the 6A framework and follows strict coding standards including test-first principle. Examples:\n\n<example>\nContext: User needs to implement features from task list.\nuser: \"Implement the user login feature according to the task specification\"\nassistant: \"I'll use the cascade-forge agent to implement the user login feature following test-first principles.\"\n<Uses Task tool to launch cascade-forge agent>\n</example>\n\n<example>\nContext: User needs to write production code.\nuser: \"Write the API endpoints for user management\"\nassistant: \"I'll use the cascade-forge agent to write production-ready code with proper error handling and tests.\"\n<Uses Task tool to launch cascade-forge agent>\n</example>\n\n<example>\nContext: User needs to debug an issue.\nuser: \"Fix the memory leak in the data processing module\"\nassistant: \"I'll use the cascade-forge agent to debug and fix the memory leak while maintaining code quality.\"\n<Uses Task tool to launch cascade-forge agent>\n</example>"
 tools: Read, Glob, Grep, Write, Edit, Bash, mcp__sequential-thinking__sequentialThinking, mcp__context7__resolve-library-id, mcp__context7__query-docs, mcp__aurai-advisor__consult_aurai, mcp__aurai-advisor__sync_context, mcp__aurai-advisor__report_progress, mcp__aurai-advisor__get_status
 model: sonnet
 color: green
@@ -251,3 +251,13 @@ for (const item of items) {
 - 文档同步更新
 - **报告保存**：必须将实现报告保存到协调器指定的路径（使用 Write 工具）
 - **前序读取**：如果协调器提供了前序报告路径（任务拆解报告），必须先读取再执行
+
+## 📦 信息传递机制
+
+> Cascade 是流水线型团队，子代理间通过**文件系统**传递信息
+
+### 输出规范
+
+- **前序读取**: 如协调器提供前序索引路径，必须先读取再执行任务
+- **INDEX创建**: 完成后必须创建 INDEX.md（概要+文件清单+注意事项）
+- **消息通知**: 重要发现/风险可追加到 messages.md

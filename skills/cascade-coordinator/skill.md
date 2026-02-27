@@ -1,6 +1,6 @@
 ---
 name: cascade-coordinator
-description: Cascade (级联战队) team coordinator skill. Manages software projects using the 6A framework (Align, Architect, Atomize, Approve, Automate, Assess), communicates with users, and coordinates expert agents (Anchor, Atlas, Prism, Forge, Scale) in sequential pipeline mode. Use when user needs structured project development following unified workflow, requirement alignment, architecture design, task breakdown, automated implementation, or quality assessment, or any other 6A framework tasks.
+description: Cascade (级联战队) team coordinator skill. Manages software projects using 6A framework (Align-Architect-Atomize-Approve-Automate-Assess), coordinates expert agents (Anchor, Atlas, Prism, Forge, Scale) in sequential pipeline mode. Use when user needs structured project development, requirement alignment, architecture design, task breakdown, automated implementation, or quality assessment.
 ---
 
 # Cascade (级联战队) 团队协调器
@@ -141,15 +141,15 @@ description: Cascade (级联战队) team coordinator skill. Manages software pro
 
 ## 任务类型映射
 
-| 任务类型 | 关键词 | 协作模式 | 执行流程 |
-|----------|--------|----------|----------|
-| 完整项目开发 | 项目、系统、应用、平台 | 全流程 | Anchor→Atlas→Prism→[审批]→Forge→Scale |
-| 需求对齐 | 需求、对齐、边界、共识 | 单阶段 | Anchor |
-| 架构设计 | 架构、设计、技术选型 | 单阶段 | Atlas |
-| 任务拆解 | 拆解、原子化、ToDoList | 单阶段 | Prism |
-| 代码实现 | 实现、开发、编码 | 单阶段 | Forge |
-| 质量评估 | 评估、验收、测试 | 单阶段 | Scale |
-| 从中间开始 | 已有XX文档、跳过XX | 阶段跳跃 | 根据已有成果确定起点 |
+| 任务类型 | 关键词 | 协作模式 | 执行流程 | MCP 需求 |
+|----------|--------|----------|----------|----------|
+| 完整项目开发 | 项目、系统、应用、平台 | 全流程 | Anchor→Atlas→Prism→[审批]→Forge→Scale | 按阶段 |
+| 需求对齐 | 需求、对齐、边界、共识 | 单阶段 | Anchor | 可能需要 |
+| 架构设计 | 架构、设计、技术选型 | 单阶段 | Atlas | 可能需要 |
+| 任务拆解 | 拆解、原子化、ToDoList | 单阶段 | Prism | 可能需要 |
+| 代码实现 | 实现、开发、编码 | 单阶段 | Forge | 通常不需要 |
+| 质量评估 | 评估、验收、测试 | 单阶段 | Scale | 可能需要 |
+| 从中间开始 | 已有XX文档、跳过XX | 阶段跳跃 | 根据已有成果确定起点 | 按阶段 |
 
 ## 质量门控检查
 
@@ -249,59 +249,128 @@ description: Cascade (级联战队) team coordinator skill. Manages software pro
 此次任务不使用 MCP 工具，请使用基础工具完成。
 ```
 
-## 📦 阶段间信息传递（流水线型团队必选）
+## 📦 统一信息传递机制
 
-> ⚠️ Cascade 是流水线型团队，必须配置阶段间信息传递机制
+> Cascade 是流水线型团队，子代理间通过**文件系统**传递信息
 
-### 存储目录
+### 目录结构
 
 ```
-{项目根目录}/.cascade/reports/
+{项目}/.cascade/
+├── phases/                    # 阶段产出目录
+│   ├── 01_align/             # Align 阶段
+│   │   ├── INDEX.md          # 阶段索引（概要+文件清单+注意事项）
+│   │   └── *.md              # 详细产出文件
+│   ├── 02_architect/
+│   ├── 03_atomize/
+│   ├── 04_automate/
+│   └── 05_assess/
+└── messages.md               # 消息汇总（可选）
 ```
 
-### 文件命名规范
+---
 
-| 阶段 | 文件名 | 内容描述 |
-|------|--------|----------|
-| Align | 01_alignment_report.md | 需求对齐报告 |
-| Architect | 02_architecture_report.md | 架构设计报告 |
-| Atomize | 03_task_breakdown.md | 任务拆解报告 |
-| Automate | 04_implementation_report.md | 实现进度报告 |
-| Assess | 05_acceptance_report.md | 验收评估报告 |
+### 机制1：阶段报告 + 索引
 
-### 触发子代理时的路径传递格式
+每个阶段完成后，子代理输出：
+1. **INDEX.md**：阶段索引，便于后续阶段快速了解概要
+2. **详细文件**：可创建多个文件组织产出
+
+**INDEX.md 格式**：
+```markdown
+# [阶段名] 阶段索引
+
+## 概要
+[2-3句核心结论]
+
+## 文件清单
+| 文件 | 说明 |
+|------|------|
+
+## 注意事项
+[后续阶段需关注的问题]
+```
+
+---
+
+### 机制2：消息通知
+
+子代理可在执行过程中发送消息到 `messages.md`：
+
+**消息格式**：
+```
+[时间] [专家] [类型]: [标题]
+内容: [详细描述]
+影响: [可选，对后续阶段的影响]
+```
+
+**消息类型**：
+| 类型 | 含义 | 使用场景 |
+|------|------|----------|
+| STATUS | 状态更新 | 阶段开始/完成/进度 |
+| DISCOVERY | 重要发现 | 新信息/技术方案/优化机会 |
+| WARNING | 风险警告 | 潜在问题/技术债务 |
+| REQUEST | 请求协助 | 需要用户确认/专家支持 |
+| INSIGHT | 深度洞察 | 架构决策/最佳实践 |
+
+**示例**：
+```
+2026-02-27 14:30 Atlas STATUS: 架构设计阶段开始
+内容: 开始基于对齐报告设计系统架构
+
+2026-02-27 15:45 Atlas INSIGHT: 推荐微服务架构
+内容: 基于高并发需求，建议采用微服务而非单体架构
+影响: 将影响 Atomize 阶段的任务拆分方式
+```
+
+---
+
+### 触发子代理格式
 
 ```markdown
 使用 cascade-[expert] 子代理执行任务：
 
-**报告路径**：
-- 前序报告：{项目路径}/.cascade/reports/xx_xxx.md（请先读取）
-- 当前报告：{项目路径}/.cascade/reports/xx_xxx.md（完成后保存）
+**📂 阶段路径**:
+- 阶段目录: {项目}/.cascade/phases/02_architect/（输出到此）
+- 前序索引: {项目}/.cascade/phases/01_align/INDEX.md（请先读取）
+- 消息文件: {项目}/.cascade/messages.md（可选通知）
+
+**📋 输出要求**:
+- INDEX.md: 必须创建（概要+文件清单+注意事项）
+- 详细文件: 可创建多个，自主命名
+
+**💬 消息机制**（可选）:
+- 格式: `[时间] [专家] [类型]: 标题` + 内容 + 影响
+- 类型: STATUS/DISCOVERY/WARNING/REQUEST/INSIGHT
 
 [任务描述...]
 ```
 
-### 各阶段依赖关系
+---
 
-| 阶段 | 子代理 | 读取（前序报告） | 保存（当前报告） |
-|------|--------|------------------|------------------|
-| Align | Anchor | 无 | 01_alignment_report.md |
-| Architect | Atlas | 01_alignment_report.md | 02_architecture_report.md |
-| Atomize | Prism | 02_architecture_report.md | 03_task_breakdown.md |
-| Automate | Forge | 03_task_breakdown.md | 04_implementation_report.md |
-| Assess | Scale | 04_implementation_report.md | 05_acceptance_report.md |
+### 各阶段依赖
 
-### 触发示例
+| 阶段 | 子代理 | 读取索引 | 保存目录 |
+|------|--------|----------|----------|
+| Align | Anchor | - | phases/01_align/ |
+| Architect | Atlas | 01_align/INDEX.md | phases/02_architect/ |
+| Atomize | Prism | 02_architect/INDEX.md | phases/03_atomize/ |
+| Automate | Forge | 03_atomize/INDEX.md | phases/04_automate/ |
+| Assess | Scale | 04_automate/INDEX.md | phases/05_assess/ |
 
-```markdown
-使用 cascade-atlas 子代理进行架构设计：
+---
 
-**报告路径**：
-- 前序报告：N:/project/.cascade/reports/01_alignment_report.md（请先读取）
-- 当前报告：N:/project/.cascade/reports/02_architecture_report.md（完成后保存）
+### 协调器消息处理
 
-请基于对齐报告设计系统架构...
-```
+协调器定期检查 `messages.md`，根据类型响应：
+
+| 消息类型 | 协调器响应 |
+|----------|-----------|
+| STATUS | 记录进度，同步用户 |
+| DISCOVERY | 评估影响，决定是否调整后续计划 |
+| WARNING | 评估风险，决定是否干预 |
+| REQUEST | 转发用户或调度其他专家 |
+| INSIGHT | 记录知识库，供后续参考 |
 
 ## 核心原则约束
 

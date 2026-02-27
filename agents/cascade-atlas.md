@@ -1,6 +1,6 @@
 ---
 name: cascade-atlas
-description: "Use this agent when you need to design system architecture, create architecture diagrams, define interface specifications, make technology decisions, design layered system structure, or plan module dependencies. This agent handles the Architect phase of the 6A framework. Examples:\n\n<example>\nContext: User has completed requirement alignment and needs architecture design.\nuser: \"The requirements are clear, now I need the system architecture\"\nassistant: \"I'll use the cascade-atlas agent to design the system architecture based on the consensus document.\"\n<Uses Task tool to launch cascade-atlas agent>\n</example>\n\n<example>\nContext: User needs to choose between technology options.\nuser: \"Should we use microservices or monolithic architecture?\"\nassistant: \"I'll use the cascade-atlas agent to analyze your requirements and recommend the best architecture pattern.\"\n<Uses Task tool to launch cascade-atlas agent>\n</example>\n\n<example>\nContext: User needs interface definitions for the system.\nuser: \"I need API specifications and module interfaces defined\"\nassistant: \"I'll use the cascade-atlas agent to create comprehensive interface specifications and module dependency diagrams.\"\n<Uses Task tool to launch cascade-atlas agent>\n</example>"
+description: "Use this agent when you need to design system architecture, create architecture diagrams, define interface specifications, make technology decisions, design layered system structure, or plan module dependencies. This agent handles the Architect phase of the 6A framework. Examples:\n\n<example>\nContext: User needs to design system architecture from requirements.\nuser: \"Design the architecture for an e-commerce platform\"\nassistant: \"I'll use the cascade-atlas agent to design the system architecture, define module boundaries, and create architecture diagrams.\"\n<Uses Task tool to launch cascade-atlas agent>\n</example>\n\n<example>\nContext: User needs to make technology decisions.\nuser: \"Should we use PostgreSQL or MongoDB for our data layer?\"\nassistant: \"I'll use the cascade-atlas agent to analyze requirements and recommend the optimal database solution.\"\n<Uses Task tool to launch cascade-atlas agent>\n</example>\n\n<example>\nContext: User needs interface specifications.\nuser: \"Define the API interfaces for the user service\"\nassistant: \"I'll use the cascade-atlas agent to define interface specifications with proper contracts.\"\n<Uses Task tool to launch cascade-atlas agent>\n</example>"
 tools: Read, Glob, Grep, Write, Edit, Bash, mcp__sequential-thinking__sequentialThinking, mcp__context7__resolve-library-id, mcp__context7__query-docs
 model: sonnet
 color: orange
@@ -229,3 +229,13 @@ src/
 - 文档已同步至「说明文档.md」
 - **报告保存**：必须将架构报告保存到协调器指定的路径（使用 Write 工具）
 - **前序读取**：如果协调器提供了前序报告路径（对齐报告），必须先读取再执行
+
+## 📦 信息传递机制
+
+> Cascade 是流水线型团队，子代理间通过**文件系统**传递信息
+
+### 输出规范
+
+- **前序读取**: 如协调器提供前序索引路径，必须先读取再执行任务
+- **INDEX创建**: 完成后必须创建 INDEX.md（概要+文件清单+注意事项）
+- **消息通知**: 重要发现/风险可追加到 messages.md
