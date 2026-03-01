@@ -43,18 +43,6 @@ mkdir -p "C:/Users/Mr.Chen/.claude/backup/$(date +%Y%m%d)"
 cp -r "C:/Users/Mr.Chen/.claude/skills/cascade-coordinator" "C:/Users/Mr.Chen/.claude/backup/"
 cp -r "C:/Users/Mr.Chen/.claude/agents/cascade-*.md" "C:/Users/Mr.Chen/.claude/backup/"
 ```
-
-### Step 2️⃣：安装协调器Skill
-
-```bash
-# 创建目标目录
-mkdir -p "C:/Users/Mr.Chen/.claude/skills"
-
-# 复制协调器配置
-cp -r "N:/编程备份/3.0团队/cascade-hybrid-team/skills/cascade-coordinator" "C:/Users/Mr.Chen/.claude/skills/"
-
-# 验证安装
-ls "C:/Users/Mr.Chen/.claude/skills/cascade-coordinator/skill.md"
 ```
 
 **预期输出**：
